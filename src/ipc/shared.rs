@@ -22,7 +22,7 @@ fn make_header(command_id: u16, normal_params: u32, translate_params: u32) -> u3
 }
 
 #[inline]
-fn make_static_buffer_header(size: usize, buffer_id: u16) -> u32 {
+pub(crate) fn make_static_buffer_header(size: usize, buffer_id: u16) -> u32 {
     ((size as u32) << 14) | (((buffer_id as u32) & 0xF) << 10) | 0x2
 }
 
@@ -78,7 +78,7 @@ unsafe fn get_thread_local_storage() -> *mut u32 {
 
 #[cfg(target_os = "horizon")]
 #[inline]
-pub(in crate) fn get_thread_command_buffer() -> &'static mut [u32] {
+pub(crate) fn get_thread_command_buffer() -> &'static mut [u32] {
     // This is safe because the command buffer is valid for 64 u32 reads/writes
     unsafe {
         slice::from_raw_parts_mut(get_thread_local_storage().offset(0x20), COMMAND_BUFFER_SIZE)
@@ -87,7 +87,7 @@ pub(in crate) fn get_thread_command_buffer() -> &'static mut [u32] {
 
 #[cfg(target_os = "horizon")]
 #[inline]
-fn get_thread_static_buffers() -> &'static mut [u32] {
+pub(crate) fn get_thread_static_buffers() -> &'static mut [u32] {
     // This is safe because the static buffers are valid for 24 u32 reads/writes
     unsafe {
         slice::from_raw_parts_mut(get_thread_local_storage().offset(0x60), STATIC_BUFFER_SIZE)
