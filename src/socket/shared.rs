@@ -80,9 +80,7 @@ fn socu_initialize_sockets(
     command.push_shared_handles(&[shared_memory_block_handle])?;
 
     let mut parser = command.build().send_sync_request(service_handle)?;
-    parser.pop_result()?;
-
-    Ok(())
+    parser.pop_result()
 }
 
 #[cfg(target_os = "horizon")]
@@ -128,13 +126,7 @@ pub(crate) fn socu_connect(
     command.push_static_buffer(&buffer, 0);
 
     let mut parser = command.build().send_sync_request(session_handle)?;
-    parser.pop_result()?;
-    let posix_result = parser.pop().into();
-    if posix_result == 0 {
-        Ok(())
-    } else {
-        Err(posix_result)
-    }
+    parser.pop_result()
 }
 
 #[cfg(target_os = "horizon")]
@@ -162,13 +154,7 @@ pub(crate) fn socu_bind(
     command.push_static_buffer(&buffer, 0);
 
     let mut parser = command.build().send_sync_request(session_handle)?;
-    parser.pop_result()?;
-    let posix_result = parser.pop().into();
-    if posix_result == 0 {
-        Ok(())
-    } else {
-        Err(posix_result)
-    }
+    parser.pop_result()
 }
 
 #[cfg(target_os = "horizon")]
@@ -192,13 +178,7 @@ pub(crate) fn socu_listen(
     command.push_curent_process_id();
 
     let mut parser = command.build().send_sync_request(session_handle)?;
-    parser.pop_result()?;
-    let posix_result = parser.pop().into();
-    if posix_result == 0 {
-        Ok(())
-    } else {
-        Err(posix_result)
-    }
+    parser.pop_result()
 }
 
 #[cfg(target_os = "horizon")]
@@ -280,8 +260,7 @@ pub(crate) fn socu_recv(
     static_buffers[0] = saved_thread_storage[0];
     static_buffers[1] = saved_thread_storage[1];
 
-    parser.pop_result()?;
-    Ok(())
+    parser.pop_result()
 }
 
 #[cfg(target_os = "horizon")]
@@ -306,8 +285,7 @@ pub(crate) fn socu_send(
 
     let mut parser = command.build().send_sync_request(session_handle)?;
 
-    parser.pop_result()?;
-    Ok(())
+    parser.pop_result()
 }
 
 pub(crate) struct SocketContextHandle(u32);
